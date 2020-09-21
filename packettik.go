@@ -11,14 +11,15 @@ import (
 )
 
 func main() {
-	const tikTime = 1
-	const timeout = 1
+	const tikTime = 1 // connect interval sec.
+	const timeout = 1 // connect timeout sec.
 	const hostname = "golang.org"
-	const port = 4433
-	const statsCycles = 10
-	connStr := hostname + ":" + strconv.Itoa(port)
+	const port = 443
+	const statCycles = 10 // print stats every X cycles
 	var counterSuccess, counterFail, counterCycles int = 0, 0, 0
 	var chanSuccess chan bool = make(chan bool)
+
+	connStr := hostname + ":" + strconv.Itoa(port)
 
 	for {
 		go checkTcp(connStr, timeout, chanSuccess)
@@ -30,7 +31,7 @@ func main() {
 		} else {
 			counterFail++
 		}
-		if counterCycles%statsCycles == 0 {
+		if counterCycles%statCycles == 0 {
 			fmt.Println("---Stats: < Success: ", counterSuccess, "> / < Fail: ", counterFail, ">")
 		}
 	}
