@@ -1,4 +1,4 @@
-/* Try to connect to host port periodically
+/* Try to connect to port on host periodically
  */
 
 package main
