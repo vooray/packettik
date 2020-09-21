@@ -43,7 +43,10 @@ func checkTcp(connStr string, timeout int, chanSuccess chan bool) {
 		chanSuccess <- false
 	} else {
 		fmt.Println(time.Now().Format(time.ANSIC), "OK! - Connected!")
-		conn.Close()
+		err := conn.Close()
+		if err != nil {
+			fmt.Println("Can not close connection! SNAFU!")
+		}
 		chanSuccess <- true
 	}
 }
