@@ -16,8 +16,8 @@ func main() {
 	const hostname = "golang.org"
 	const port = 443
 	const statCycles = 10 // print stats every X cycles
-	var counterSuccess, counterFail, counterCycles int = 0, 0, 0
-	var chanSuccess chan bool = make(chan bool)
+	var counterSuccess, counterFail, counterCycles = 0, 0, 0
+	var chanSuccess = make(chan bool)
 
 	connStr := hostname + ":" + strconv.Itoa(port)
 
