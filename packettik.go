@@ -32,7 +32,7 @@ func main() {
 			counterFail++
 		}
 		if counterCycles%statCycles == 0 {
-			fmt.Println("---Stats: < Success: ", counterSuccess, "> / < Fail: ", counterFail, ">")
+			fmt.Println("--- Stats: < Success: ", counterSuccess, "> / < Fail: ", counterFail, ">")
 		}
 	}
 }
@@ -40,10 +40,10 @@ func main() {
 func checkTcp(connStr string, timeout int, chanSuccess chan bool) {
 	conn, err := net.DialTimeout("tcp", connStr, time.Duration(timeout)*time.Second)
 	if err != nil {
-		fmt.Println(time.Now().Format(time.ANSIC), "Fail! - Can not connect!", err)
+		fmt.Println(time.Now().Format(time.ANSIC), "Fail! - Can not connect <", connStr, "> Error:", err)
 		chanSuccess <- false
 	} else {
-		fmt.Println(time.Now().Format(time.ANSIC), "OK! - Connected!")
+		fmt.Println(time.Now().Format(time.ANSIC), "OK! - Connected <", connStr, " >")
 		err := conn.Close()
 		if err != nil {
 			fmt.Println("Can not close connection! SNAFU!")
