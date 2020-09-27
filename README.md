@@ -1,6 +1,6 @@
 Packettik
 =========
-Realy simple utility to check tcp connectivity periodically and print success/fail counts
+Really simple utility to check tcp connectivity periodically and print success/fail counts
 
 to run:
 ```
