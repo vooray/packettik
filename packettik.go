@@ -13,8 +13,8 @@ import (
 )
 
 func main() {
-	const tikTime = 1 // connect interval sec.
-	const timeout = 1 // connect timeout sec.
+	var tikTime int // connect interval sec.
+	var timeout int // connect timeout sec.
 	var hostname string
 	var port int
 	const statCycles = 10 // print stats every X cycles
@@ -23,9 +23,11 @@ func main() {
 
 	flag.StringVar(&hostname, "h", "", "destination hostname")
 	flag.IntVar(&port, "p", 0, "destination port number")
+	flag.IntVar(&tikTime, "i", 0, "check interval (sec)")
+	flag.IntVar(&timeout, "t", 0, "timeout (sec)")
 	flag.Parse()
 
-	if hostname == "" || port == 0 {
+	if hostname == "" || port == 0 || tikTime == 0 || timeout == 0 {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
