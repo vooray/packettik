@@ -4,8 +4,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
+	"os"
 	"strconv"
 	"time"
 )
@@ -13,11 +15,20 @@ import (
 func main() {
 	const tikTime = 1 // connect interval sec.
 	const timeout = 1 // connect timeout sec.
-	const hostname = "golang.org"
-	const port = 443
+	var hostname string
+	var port int
 	const statCycles = 10 // print stats every X cycles
 	var counterSuccess, counterFail, counterCycles = 0, 0, 0
 	var chanSuccess = make(chan bool)
+
+	flag.StringVar(&hostname, "h", "", "destination hostname")
+	flag.IntVar(&port, "p", 0, "destination port number")
+	flag.Parse()
+
+	if hostname == "" || port == 0 {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
 
 	connStr := hostname + ":" + strconv.Itoa(port)
 
