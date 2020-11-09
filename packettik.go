@@ -5,7 +5,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"io"
+	"log"
 	"net"
 	"os"
 	"strconv"
@@ -15,24 +16,41 @@ import (
 func main() {
 	var tikTime int // connect interval sec.
 	var timeout int // connect timeout sec.
-	var hostname string
+	var destination string
 	var port int
 	const statCycles = 10 // print stats every X cycles
 	var counterSuccess, counterFail, counterCycles = 0, 0, 0
 	var chanSuccess = make(chan bool)
+	var logFilename string // log to file named logFilename
+	var logging bool
 
-	flag.StringVar(&hostname, "h", "", "destination hostname")
-	flag.IntVar(&port, "p", 0, "destination port number")
-	flag.IntVar(&tikTime, "i", 0, "check interval (sec)")
-	flag.IntVar(&timeout, "t", 0, "timeout (sec)")
+	flag.StringVar(&destination, "d", "", "destination destination <mandatory>")
+	flag.IntVar(&port, "p", 0, "destination port number <mandatory>")
+	flag.IntVar(&tikTime, "i", 0, "check interval (sec) <mandatory>")
+	flag.IntVar(&timeout, "t", 0, "timeout (sec) <mandatory>")
+	flag.StringVar(&logFilename, "l", "", "log to file [filename] <optional>")
 	flag.Parse()
 
-	if hostname == "" || port == 0 || tikTime == 0 || timeout == 0 {
+	if destination == "" || port == 0 || tikTime == 0 || timeout == 0 {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
-	connStr := hostname + ":" + strconv.Itoa(port)
+	if logFilename == "" {
+		logging = false
+		log.Println("Logging to console only")
+	} else {
+		logging = true
+		logFile, err := os.OpenFile(logFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 666)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.SetOutput(io.MultiWriter(os.Stdout, logFile))
+		log.Println("Logging to console and file: ", logFilename)
+	}
+
+	connStr := destination + ":" + strconv.Itoa(port)
 
 	for {
 		go checkTcp(connStr, timeout, chanSuccess)
@@ -45,7 +63,9 @@ func main() {
 			counterFail++
 		}
 		if counterCycles%statCycles == 0 {
-			fmt.Println("--- Stats: < Success: ", counterSuccess, "> / < Fail: ", counterFail, ">")
+			if logging {
+				log.Println("--- Stats: < Success: ", counterSuccess, "> / < Fail: ", counterFail, ">")
+			}
 		}
 	}
 }
@@ -53,13 +73,13 @@ func main() {
 func checkTcp(connStr string, timeout int, chanSuccess chan bool) {
 	conn, err := net.DialTimeout("tcp", connStr, time.Duration(timeout)*time.Second)
 	if err != nil {
-		fmt.Println(time.Now().Format(time.ANSIC), "Fail! - Can not connect <", connStr, "> Error:", err)
+		log.Println(time.Now().Format(time.ANSIC), "Fail! - Failed to connect: <", connStr, "> Error:", err)
 		chanSuccess <- false
 	} else {
-		fmt.Println(time.Now().Format(time.ANSIC), "OK! - Connected <", connStr, " >")
+		log.Println(time.Now().Format(time.ANSIC), "OK! - Connected to: <", connStr, " >")
 		err := conn.Close()
 		if err != nil {
-			fmt.Println("Can not close connection! SNAFU!")
+			log.Println("Can not close connection! SNAFU!")
 		}
 		chanSuccess <- true
 	}
