@@ -47,6 +47,7 @@ func main() {
 		}
 
 		log.SetOutput(io.MultiWriter(os.Stdout, logFile))
+		log.SetFlags(log.LstdFlags)
 		log.Println("Logging to console and file: ", logFilename)
 	}
 
@@ -73,10 +74,10 @@ func main() {
 func checkTcp(connStr string, timeout int, chanSuccess chan bool) {
 	conn, err := net.DialTimeout("tcp", connStr, time.Duration(timeout)*time.Second)
 	if err != nil {
-		log.Println(time.Now().Format(time.ANSIC), "Fail! - Failed to connect: <", connStr, "> Error:", err)
+		log.Println("Fail! - Failed to connect: <", connStr, "> Error:", err)
 		chanSuccess <- false
 	} else {
-		log.Println(time.Now().Format(time.ANSIC), "OK! - Connected to: <", connStr, " >")
+		log.Println("OK! - Connected to: <", connStr, " >")
 		err := conn.Close()
 		if err != nil {
 			log.Println("Can not close connection! SNAFU!")
