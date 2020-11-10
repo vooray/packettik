@@ -5,6 +5,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -27,12 +28,13 @@ func main() {
 	flag.StringVar(&destination, "d", "", "destination destination <mandatory>")
 	flag.IntVar(&port, "p", 0, "destination port number <mandatory>")
 	flag.IntVar(&tikTime, "i", 0, "check interval (sec) <mandatory>")
-	flag.IntVar(&timeout, "t", 0, "timeout (sec) <mandatory>")
+	flag.IntVar(&timeout, "t", 0, "session timeout (sec) <mandatory>")
 	flag.StringVar(&logFilename, "l", "", "log to file [filename] <optional>")
 	flag.Parse()
 
 	if destination == "" || port == 0 || tikTime == 0 || timeout == 0 {
 		flag.PrintDefaults()
+		fmt.Println("Example: packettik.exe -d google.com -p 443 -i 1 -t 1 -l google_com_443.log")
 		os.Exit(1)
 	}
 
