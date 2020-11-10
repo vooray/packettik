@@ -25,7 +25,7 @@ func main() {
 	var logFilename string // log to file named logFilename
 	var logging bool
 
-	flag.StringVar(&destination, "d", "", "destination destination <mandatory>")
+	flag.StringVar(&destination, "d", "", "destination host <mandatory>")
 	flag.IntVar(&port, "p", 0, "destination port number <mandatory>")
 	flag.IntVar(&tikTime, "i", 0, "check interval (sec) <mandatory>")
 	flag.IntVar(&timeout, "t", 0, "session timeout (sec) <mandatory>")

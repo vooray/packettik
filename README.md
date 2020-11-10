@@ -10,7 +10,7 @@ go run packettik.go -d google.com -p 443 -i 1 -t 1 -l google_com_443.log
 ```
 Help:
   -d string
-        destination destination <mandatory>
+        destination host <mandatory>
   -i int
         check interval (sec) <mandatory>
   -l string
