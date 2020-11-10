@@ -33,8 +33,11 @@ func main() {
 	flag.Parse()
 
 	if destination == "" || port == 0 || tikTime == 0 || timeout == 0 {
+		fmt.Println("\n\t* Mandatory arguments missing")
+		fmt.Println("\n\t* Example: packettik.exe -d google.com -p 443 -i 1 -t 1 -l google_com_443.log\n")
+		fmt.Println(" Help:\n")
 		flag.PrintDefaults()
-		fmt.Println("Example: packettik.exe -d google.com -p 443 -i 1 -t 1 -l google_com_443.log")
+		fmt.Println("\n")
 		os.Exit(1)
 	}
 
